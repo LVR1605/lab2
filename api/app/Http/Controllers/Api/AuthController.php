@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\AuthenticatedUserResource;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -30,25 +31,13 @@ class AuthController extends Controller
             );
         }
 
-        return
+        $response = (object)
         [
-            'user'=>$user,
+            'user'=>new UserResource($user),
             'token'=>$user->createToken('auth')->plainTextToken
         ];
+        return new AuthenticatedUserResource($response);
     }
-    public function register(StoreUserRequest $request) {
-        $request->validated($request->all());
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return $this->success([
-            'user' => $user,
-            'token' => $user->createToken('API Token of '. $user->first_name)->plainTextToken
-        ]);
-    }
 
 }
