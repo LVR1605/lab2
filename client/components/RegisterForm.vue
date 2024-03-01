@@ -58,9 +58,10 @@ async function submitForm() {
       body: params, // Stringify the params object
     });
 
-    if (response._data) { // Corrected response._data from response.date 
-      localStorage.setItem('_token', response._data.token);
+    if (response.data) { // Corrected response._data from response.date
+      localStorage.setItem('_token', response.data.token);
       navigateTo('//')
+      alert('Successfully created');
     }
   } catch (error) {
     state.errors = error.response
