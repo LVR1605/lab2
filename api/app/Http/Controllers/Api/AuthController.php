@@ -58,7 +58,9 @@ class AuthController extends Controller
         return new AuthenticatedUserResource($response);
     }
 
-
-
-
+    public function getUsers()
+    {
+        $users = User::all();
+        return UserResource::collection($users);
+    }
 }

@@ -49,7 +49,7 @@ async function submitForm() {
 
     if (response.data) { // Corrected response.data from response.date
       localStorage.setItem('_token', response.data.token);
-      navigateTo('//')
+      navigateTo('/dashboard')
     }
   } catch (error) {
     state.errors = error.response
