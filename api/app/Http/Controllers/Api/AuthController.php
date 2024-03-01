@@ -40,4 +40,24 @@ class AuthController extends Controller
     }
 
 
+    public function register(AuthRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        $user = User::create([
+            'name' => $validatedData['name'], // Ensure 'name' field is present and valid
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        $response = (object) [
+            'user' => new UserResource($user),
+            'token' => $user->createToken('auth')->plainTextToken
+        ];
+        return new AuthenticatedUserResource($response);
+    }
+
+
+
+
 }

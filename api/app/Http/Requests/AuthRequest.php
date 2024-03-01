@@ -23,6 +23,7 @@ class AuthRequest extends FormRequest
     {
         return [
             //
+            'name' => 'nullable|string',
             'email'=>'required|email',
             'password'=>'required'
         ];
