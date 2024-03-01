@@ -7,12 +7,12 @@
       <div>
         <input type="text" name="name" placeholder="Name" v-model="state.user.name"/>
         <p class="text-red-700" >
-          {{ state.errors && state.errors._data && state.errors._data.errors && state.errors._data.errors.name[0]}}
+          {{ state.errors && state.errors._data && state.errors._data.errors.name && state.errors._data.errors.name[0] }}
         </p>
       </div>
      </div>
      <div>
-      <label for="'email'">Email Address</label>
+      <label for="'email'">Email</label>
       <div>
         <input type="text" name="email" placeholder="Email Address" v-model="state.user.email"/>
         <p class="text-red-700" >
