@@ -1,5 +1,11 @@
 <template>
-  <div v-if="isLoggedIn">
+  <div>
+    <div v-if="token">
+      <h3>Token: {{ token }}</h3>
+    </div>
+    <div v-else>
+      <h3>No token available</h3>
+    </div>
     <h2>Users</h2>
     <table>
       <thead>
@@ -16,23 +22,22 @@
       </tbody>
     </table>
   </div>
-  <div v-else>
-    <p>Please log in to view users.</p>
-  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const users = ref([]);
-const isLoggedIn = ref(false);
+let token = null;
+
+// Check if localStorage is available before accessing it
+if (typeof localStorage !== 'undefined') {
+  token = localStorage.getItem('_token');
+}
 
 onMounted(async () => {
-  try {
-    const token = localStorage.getItem('_token');
-    if (token) {
-      isLoggedIn.value = true;
-
+  if (token) {
+    try {
       const response = await fetch('http://127.0.0.1:8000/api/auth/users', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -45,28 +50,41 @@ onMounted(async () => {
       } else {
         console.error('Failed to fetch users:', response.statusText);
       }
+    } catch (error) {
+      console.error('Error fetching users:', error);
     }
-  } catch (error) {
-    console.error('Error fetching users:', error);
   }
 });
+
+onBeforeUnmount(() => {
+  // Check if the current URL is not localhost:3000/dashboard before clearing the token
+  if (!window.location.href.includes('localhost:3000/dashboard')) {
+    logoutUser();
+  }
+});
+
+async function logoutUser() {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/auth/logout', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      console.log('User logged out successfully');
+    } else {
+      console.error('Failed to log out user:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error logging out user:', error);
+  }
+
+  // Clear token from localStorage
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('_token');
+  }
+}
+
 </script>
-
-<style>
-/* Add your table styles here if needed */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-</style>

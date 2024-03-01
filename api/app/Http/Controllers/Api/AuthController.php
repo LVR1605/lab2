@@ -58,9 +58,16 @@ class AuthController extends Controller
         return new AuthenticatedUserResource($response);
     }
 
-    public function getUsers()
+    public function getUsers(Request $request)
     {
         $users = User::all();
         return UserResource::collection($users);
+    }
+
+    public function logout(Request $request){
+        $request->user()->tokens()->delete();
+        return response()->json([
+            'message'=>'User successfully logged out',
+        ],200);
     }
 }
