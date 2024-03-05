@@ -18,7 +18,7 @@
           <label for="name" class="block text-gray-600">Name</label>
           <div>
             <input type="text" name="name" id="name" placeholder="Name" v-model="state.user.name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
-            <p class="text-red-700">{{ state.errors && state.errors._data && state.errors._data.errors && state.errors._data.errors.name[0]}}</p>
+            <p class="text-red-700">{{ state.errors && state.errors._data && state.errors._data.errors && state.errors._data.errors.name && state.errors._data.errors.name[0]}}</p>
           </div>
         </div>
 
@@ -80,7 +80,7 @@ async function submitForm() {
       }
     });
 
-    if (response.data && response.data.token) {
+    if (response.data) {
       localStorage.setItem('_token', response.data.token);
       navigateTo('/');
       alert('Successfully created');

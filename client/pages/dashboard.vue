@@ -81,6 +81,10 @@ onBeforeUnmount(() => {
 
 async function logoutUser() {
   try {
+    // Show confirmation alert
+    const confirmLogout = confirm('Are you sure you want to log out?');
+    if (!confirmLogout) return;
+
     const response = await fetch('http://127.0.0.1:8000/api/auth/logout', {
       method: 'GET',
       headers: {
@@ -103,6 +107,7 @@ async function logoutUser() {
     localStorage.removeItem('_token');
   }
 }
+
 
 watch(() => window.location.href, (newValue, oldValue) => {
   if (newValue !== oldValue && newValue.includes('/dashboard')) {
