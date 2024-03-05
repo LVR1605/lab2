@@ -1,26 +1,29 @@
 <template>
-  <div>
-    <nuxt-link to="/">Back</nuxt-link>
+      <div class="min-h-32 bg-slate-200">
+        <NavigationButtons />
+        <nuxt />
+      </div>
+
+
+  <div class="min-h-screen bg-slate-200">
+    <div class="flex items-center justify-center pb-10 ">
+    <nuxt-link class="px-3 py-2 text-white duration-300 bg-blue-500 rounded-md hover:bg-red-500" to="/login">Logout</nuxt-link>
     <ViewUsers />
   </div>
-
-  <div class="mt-4">
-    <h2 class="flex items-center justify-center mb-2 text-xl font-bold">Users</h2>
-    <div class="flex items-center justify-center border-2 border-red-900">
-      <div class="w-9/12">
-        <table class="w-full">
-          <thead class="flex items-center justify-between">
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2">Name</th>
-            </tr>
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2">Email</th>
+    <h2 class="flex items-center justify-center pt-10 text-6xl">Users</h2>
+    <div>
+      <div class="flex items-center justify-center">
+        <table class="m-10 border-2 border-black">
+          <thead class="text-3xl">
+            <tr class="bg-blue-300">
+              <th class="py-3 font-semibold border-2 border-black px-60">Name</th>
+              <th class="py-3 font-semibold border-2 border-black px-60">Email</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id" class="border-t">
-              <td class="px-4 py-2">{{ user.name }}</td>
-              <td class="px-4 py-2">{{ user.email }}</td>
+          <tbody class="text-xl bg-slate-50">
+            <tr v-for="user in users" :key="user.id">
+              <td class="py-3 border-black border-x-2 px-60">{{ user.name }}</td>
+              <td class="py-3 border-black border-x-2 px-60">{{ user.email }}</td>
             </tr>
           </tbody>
         </table>
@@ -30,6 +33,11 @@
 </template>
 
 <script setup>
+import NavigationButtons from '~/components/default.vue'
+
+components: {
+  NavigationButtons
+}
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
 const users = ref([]);
@@ -52,11 +60,14 @@ onMounted(async () => {
       if (response.ok) {
         const data = await response.json();
         users.value = data.data;
+        alert('Successfully logged in');
       } else {
         console.error('Failed to fetch users:', response.statusText);
+        alert('Error fetching users');
       }
     } catch (error) {
       console.error('Error fetching users:', error);
+      alert('Error fetching users');
     }
   }
 });
@@ -79,6 +90,7 @@ async function logoutUser() {
 
     if (response.ok) {
       console.log('User logged out successfully');
+      alert('User logged out successfully');
     } else {
       console.error('Failed to log out user:', response.statusText);
     }
