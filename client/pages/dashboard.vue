@@ -20,10 +20,10 @@
               <th class="py-3 font-semibold border-2 border-black px-60">Email</th>
             </tr>
           </thead>
-          <tbody class="text-xl bg-slate-50">
+          <tbody class="text-xl bg-slate-50 ">
             <tr v-for="user in users" :key="user.id">
-              <td class="py-3 border-black border-x-2 px-60">{{ user.name }}</td>
-              <td class="py-3 border-black border-x-2 px-60">{{ user.email }}</td>
+              <td class="py-3 border-black border-x-2 px-60 hover:bg-gray-200">{{ user.name }}</td>
+              <td class="py-3 border-black border-x-2 px-60 hover:bg-gray-200">{{ user.email }}</td>
             </tr>
           </tbody>
         </table>
