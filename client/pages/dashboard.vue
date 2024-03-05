@@ -1,36 +1,36 @@
 <template>
-    <div>
-      <nuxt-link to="/">Back</nuxt-link>
-      <ViewUsers />
-    </div>
   <div>
-    <div v-if="token">
-      <h3>Token: {{ token }}</h3>
+    <nuxt-link to="/">Back</nuxt-link>
+    <ViewUsers />
+  </div>
+
+  <div class="mt-4">
+    <h2 class="flex items-center justify-center mb-2 text-xl font-bold">Users</h2>
+    <div class="flex items-center justify-center border-2 border-red-900">
+      <div class="w-9/12">
+        <table class="w-full">
+          <thead class="flex items-center justify-between">
+            <tr class="bg-gray-200">
+              <th class="px-4 py-2">Name</th>
+            </tr>
+            <tr class="bg-gray-200">
+              <th class="px-4 py-2">Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.id" class="border-t">
+              <td class="px-4 py-2">{{ user.name }}</td>
+              <td class="px-4 py-2">{{ user.email }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div v-else>
-      <h3>No token available</h3>
-    </div>
-    <h2>Users</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
 const users = ref([]);
 let token = null;
