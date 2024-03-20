@@ -41,6 +41,8 @@
 <script setup>
 import { reactive } from 'vue'
 import NavigationButtons from '~/components/default.vue'
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 
   components: {
     NavigationButtons
@@ -53,6 +55,14 @@ const state = reactive({
   }
 })
 
+const rules = {
+    name: { required },
+    email: { required },
+    password: { required },
+}
+
+const validate$ = useVuelidate(rules, state)
+
 async function submitForm() {
   const params = {
     email: state.user.email,
@@ -60,6 +70,7 @@ async function submitForm() {
   };
 
   try {
+    await validate$();
     const response = await $fetch('http://127.0.0.1:8000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(params),

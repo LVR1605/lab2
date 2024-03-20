@@ -15,6 +15,7 @@
       <form @submit.prevent="submitForm" class="space-y-4">
         <!-- Name field -->
         <div>
+
           <label for="name" class="block text-gray-600">Name</label>
           <div>
             <input type="text" name="name" id="name" placeholder="Name" v-model="state.user.name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
@@ -48,8 +49,10 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import NavigationButtons from '~/components/default.vue'
+import { reactive } from 'vue';
+import NavigationButtons from '~/components/default.vue';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 
   components: {
     NavigationButtons
@@ -62,16 +65,23 @@ const state = reactive({
     email: null,
     password: null,
   }
-})
+});
+
+const rules = {
+    name: { required },
+    email: { required },
+    password: { required },
+};
+
+const validate$ = useVuelidate(rules, state)
 
 async function submitForm() {
-  const params = {
-    name: state.user.name,
-    email: state.user.email,
-    password: state.user.password,
-  };
+  const result = await validate$.value.$validate();
+
+  
 
   try {
+    // await validate$();
     const response = await $fetch('http://127.0.0.1:8000/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(params),
@@ -81,9 +91,13 @@ async function submitForm() {
     });
 
     if (response.data) {
+      const data = await response.json();
       localStorage.setItem('_token', response.data.token);
       navigateTo('/');
       alert('Successfully created');
+    }
+    else {
+      throw new Error('Failed to create user');
     }
   } catch (error) {
     state.errors = error.response;
